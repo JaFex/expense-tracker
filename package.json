@@ -6,7 +6,7 @@
     "lerna": "^8.2.2"
   },
   "scripts": {
-    "lint": "lerna run lint",
+    "lint:staged": "lerna run lint:staged --concurrency 1",
     "test": "lerna run test",
     "prepare": "husky"
   },
