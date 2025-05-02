@@ -1,0 +1,17 @@
+{
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lerna": "^8.2.2"
+  },
+  "scripts": {
+    "lint": "lerna run lint",
+    "test": "lerna run test",
+    "prepare": "husky"
+  },
+  "workspaces": [
+    "web/*",
+    "backend/*"
+  ]
+}
