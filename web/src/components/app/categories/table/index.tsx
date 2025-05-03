@@ -4,21 +4,11 @@ import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-// TODO: move this type from here
-enum FlowType {
-    INCOME = 'I',
-    EXPENSE = 'E'
-}
+import { Category } from "@/types/category";
+import { FlowType } from "@/types/enums";
 
 type Props = {
     type?: FlowType
-}
-
-// TODO: move this type from here
-type Category = {
-    name: string,
-    description?: string,
-    type: FlowType
 }
 
 export const CategoryTable = ({ type }: Props) => {

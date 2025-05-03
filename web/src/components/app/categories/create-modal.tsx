@@ -8,24 +8,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from 'zod';
 import axios from 'axios';
-
-// TODO: Remove this type from here
-enum FlowType {
-    INCOME = 'I',
-    EXPENSE = 'E'
-}
-
-// TODO: Remove this schema
-const CategorySchema = z.object({
-    name: z.string(),
-    description: z.string().optional(),
-    type: z.nativeEnum(FlowType)
-});
-
-// TODO: Remove this type from here
-type Category = z.infer<typeof CategorySchema>;
+import { FlowType } from "@/types/enums";
+import { Category, CategorySchema } from "@/types/category";
 
 type Props = {
     type?: FlowType
@@ -53,7 +38,7 @@ export const CategoryCreateModal = ({ type }: Props) => {
             type: type,
             description: undefined
         },
-        resolver: zodResolver(CategorySchema)
+        resolver: zodResolver(CategorySchema),
     });
 
     function onSubmit(values: Category) {
