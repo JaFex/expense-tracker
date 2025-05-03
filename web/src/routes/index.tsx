@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next';
 
 export const Route = createFileRoute('/')({
     component: Index,
@@ -15,12 +16,14 @@ function Index() {
     // - expenses/incomes by category (graph) [Or maybe a top by type]
     // - timeframe evolution graph
 
+    const { t } = useTranslation();
+
 
     return (
         <div>
             <div className="mb-4 border-b pb-2 text-4xl font-semibold flex items-center justify-between">
                 <h2>
-                    Dashboard
+                    {t('dashboard')}
                 </h2>
             </div>
         </div>
