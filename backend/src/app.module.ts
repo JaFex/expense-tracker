@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { CategoriesModule } from './categories/categories.module';
+import { ConfigModule } from '@nestjs/config';
+import { validate } from './configs';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true, validate }),
     MikroOrmModule.forRoot(),
+    HealthModule,
     CategoriesModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,20 +1,11 @@
-import { Entity, Enum, PrimaryKey, Property, Unique } from "@mikro-orm/core";
+import { Entity, Enum, Property } from "@mikro-orm/core";
 import { FlowType } from "../../common/enums";
 import { CreateCategoryDto } from "../dto/create-category.dto";
-import { v4 } from "uuid";
 import { UpdateCategoryDto } from "../dto/update-category.dto";
-
-// TODO: create a base entity from whjere all this new entities will extend
+import { BaseEntity } from "../../common/entities/base.entity";
 
 @Entity()
-export class Category {
-
-    @PrimaryKey({ hidden: true })
-    id: number;
-
-    @Property()
-    @Unique()
-    $id: string = v4();
+export class Category extends BaseEntity<UpdateCategoryDto> {
 
     @Property()
     name!: string;
@@ -26,6 +17,7 @@ export class Category {
     type!: FlowType;
 
     constructor({ name, description, type }: CreateCategoryDto) {
+        super();
         this.name = name;
         this.description = description;
         this.type = type;

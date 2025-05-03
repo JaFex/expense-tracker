@@ -6,20 +6,17 @@ import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
-// TODO: add swagger support
-// Improve responses and response codes
-
 @Injectable()
 export class CategoriesService {
 
   constructor(
-    private readonly em: EntityManager,
     @InjectRepository(Category)
-    private readonly categoryRepository: EntityRepository<Category>
-  ){}
+    private readonly categoryRepository: EntityRepository<Category>,
+    private readonly em: EntityManager,
+  ) { }
 
   private async getById(id: string) {
-    const category = await this.categoryRepository.findOne({$id: id});
+    const category = await this.categoryRepository.findOne({ $id: id });
     if (!category) throw new NotFoundException();
     return category;
   }
@@ -41,7 +38,7 @@ export class CategoriesService {
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.getById(id);
     category.update(updateCategoryDto);
-    
+
     await this.em.flush();
 
     return category;

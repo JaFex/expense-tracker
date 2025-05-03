@@ -3,20 +3,25 @@ import { Migrator } from '@mikro-orm/migrations';
 import { defineConfig, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SeedManager } from '@mikro-orm/seeder';
+import { config } from 'dotenv';
 
-// TODO: Move some of this strings to env vars
-// TODO: create some seeds to populate inital data
+ 
+config();
 
 export default defineConfig({
-  host: 'localhost',
-  port: 5432,
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT ?? '5432'),
   entities: ["./dist/**/*.entity.(ts|js)"],
   entitiesTs: ["./src/**/*.entity.ts"],
-  dbName: 'finance-dev',
+  dbName: process.env.DB_NAME,
   driver: PostgreSqlDriver,
-  user: 'postgres',
-  password: 'password',
-  debug: true,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  debug: process.env.DB_DEBUG === 'true',
   metadataProvider: TsMorphMetadataProvider,
   extensions: [Migrator, EntityGenerator, SeedManager],
+  seeder: {
+    path: 'src/seeds',
+    defaultSeeder: 'DatabaseSeeder',
+  },
 });

@@ -5,8 +5,8 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { Category } from './entities/category.entity';
 
 @Module({
-  imports:[MikroOrmModule.forFeature([Category])],
+  imports: [MikroOrmModule.forFeature({ entities: [Category] })],
   controllers: [CategoriesController],
   providers: [CategoriesService],
 })
-export class CategoriesModule {}
+export class CategoriesModule { }
