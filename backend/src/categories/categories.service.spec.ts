@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoriesService } from './categories.service';
 
+// FIXME: Not working
+
 describe('CategoriesService', () => {
   let service: CategoriesService;
 

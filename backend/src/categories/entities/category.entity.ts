@@ -4,6 +4,8 @@ import { CreateCategoryDto } from "../dto/create-category.dto";
 import { v4 } from "uuid";
 import { UpdateCategoryDto } from "../dto/update-category.dto";
 
+// TODO: create a base entity from whjere all this new entities will extend
+
 @Entity()
 export class Category {
 

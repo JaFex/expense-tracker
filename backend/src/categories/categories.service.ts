@@ -6,6 +6,9 @@ import { EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager } from '@mikro-orm/postgresql';
 
+// TODO: add swagger support
+// Improve responses and response codes
+
 @Injectable()
 export class CategoriesService {
 

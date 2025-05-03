@@ -4,6 +4,9 @@ import { defineConfig, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 import { SeedManager } from '@mikro-orm/seeder';
 
+// TODO: Move some of this strings to env vars
+// TODO: create some seeds to populate inital data
+
 export default defineConfig({
   host: 'localhost',
   port: 5432,
