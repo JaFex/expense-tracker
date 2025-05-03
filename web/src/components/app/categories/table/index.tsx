@@ -2,10 +2,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { flexRender, getCoreRowModel, useReactTable, ColumnFiltersState, getFilteredRowModel } from "@tanstack/react-table"
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import { Category } from "@/types/category";
 import { FlowType } from "@/types/enums";
+import { useQueryCategories } from "@/hooks/query/categories";
 
 type Props = {
     type?: FlowType
@@ -15,16 +13,10 @@ export const CategoryTable = ({ type }: Props) => {
 
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-    const { data } = useQuery({
-        queryKey: ['categories'],
-        queryFn: async () => {
-            const res = await axios.get('/api/categories');
-            return res.data as Category[];
-        }
-    })
+    const { list } = useQueryCategories();
 
     const table = useReactTable({
-        data: data ?? [], columns,
+        data: list.data ?? [], columns,
         getCoreRowModel: getCoreRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnFiltersChange: setColumnFilters,

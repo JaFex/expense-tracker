@@ -5,12 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from 'axios';
 import { FlowType } from "@/types/enums";
 import { Category, CategorySchema } from "@/types/category";
+import { useQueryCategories } from "@/hooks/query/categories";
 
 type Props = {
     type?: FlowType
@@ -19,18 +18,7 @@ type Props = {
 export const CategoryCreateModal = ({ type }: Props) => {
     const [open, setOpen] = useState(false);
 
-    const queryClient = useQueryClient();
-
-    // TODO: Maybe its a better approach move all the mutation and queries for a centralized hook
-    // TODO: Move the calls to a better place too and do abbeter organization
-    const { mutate } = useMutation({
-        mutationFn: (data: Category) => {
-            return axios.post('/api/categories', data);
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['categories'] });
-        }
-    });
+    const { create } = useQueryCategories();
 
     const form = useForm<Category>({
         defaultValues: {
@@ -42,7 +30,7 @@ export const CategoryCreateModal = ({ type }: Props) => {
     });
 
     function onSubmit(values: Category) {
-        mutate(values);
+        create.mutate(values);
         form.reset();
         setOpen(false);
     }
