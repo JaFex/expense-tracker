@@ -1,22 +1,34 @@
 import dotenv from 'dotenv';
 import { z } from 'zod';
-import { logger } from '../tools/logger';
 
-dotenv.config();
+dotenv.config({ path: '.env' });
 
 const ConfigSchema = z.object({
 	PORT: z.coerce.number(),
+	DEBUG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
 });
 
 export type Configs = z.infer<typeof ConfigSchema>;
 
-export const configs = ((): Configs => {
-	const result = ConfigSchema.safeParse(process.env);
+class ConfigSingleton {
+	private static instance: Configs;
 
-	if (!result.success) {
-		logger.error(result.error.toString());
-		process.exit(1);
+	private constructor() {}
+
+	public static getInstance(): Configs {
+		if (!ConfigSingleton.instance) {
+			const result = ConfigSchema.safeParse(process.env);
+
+			if (!result.success) {
+				console.error(result.error.toString());
+				process.exit(1);
+			}
+
+			ConfigSingleton.instance = result.data;
+		}
+
+		return ConfigSingleton.instance;
 	}
+}
 
-	return result.data;
-})();
+export const configs: Configs = ConfigSingleton.getInstance();
