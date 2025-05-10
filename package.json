@@ -10,7 +10,7 @@
     "lerna": "^8.2.2"
   },
   "scripts": {
-    "lint:staged": "lerna run lint:staged",
+    "lint:staged": "lerna run check:staged",
     "test": "lerna run test",
     "prepare": "husky"
   },
