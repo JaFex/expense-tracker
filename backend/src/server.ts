@@ -1,6 +1,5 @@
 import { app } from './app';
 import { configs } from './configs/configs';
-import { swaggerDocs } from './configs/swagger';
 import { logger } from './tools/logger';
 
 const port = configs.PORT;

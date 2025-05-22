@@ -5,6 +5,7 @@ dotenv.config({ path: '.env' });
 
 const ConfigSchema = z.object({
 	PORT: z.coerce.number(),
+	DATABASE_URL: z.string(),
 	DEBUG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
 });
 
