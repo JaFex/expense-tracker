@@ -7,6 +7,8 @@ import { ConflitException } from '../exceptions/conflit.exception';
 import { UnauthorizedException } from '../exceptions/unauthorized.exception';
 import type { SigninPayload } from '../schemas/signin.schema';
 import type { SignupPayload } from '../schemas/signup.schemas';
+import { createAuthToken } from '../tools/tokens';
+import type { AuthenticatedRequest } from '../types/AuthenticatedRequest';
 import { HttpStatusCode } from '../types/HttpStatusCode';
 import { InternalErrorCode } from '../types/InternalErrorCode';
 
@@ -14,6 +16,8 @@ async function getByEmail(email: string) {
 	return db.query.users.findFirst({ where: eq(users.email, email) });
 }
 
+// TODO: In the future we will have support to account confirmationn by email
+// the user should only be able to signin after confirming the email
 export async function SignupHandler(
 	req: Request<unknown, SignupPayload>,
 	res: Response,
@@ -58,5 +62,12 @@ export async function SigninHandler(
 		);
 	}
 
-	res.status(HttpStatusCode.OK).send(user);
+	const token = createAuthToken(user);
+
+	res.status(HttpStatusCode.OK).send({ token });
+}
+
+export async function ProfileHandler(req: AuthenticatedRequest, res: Response) {
+	const { user } = req;
+	res.status(HttpStatusCode.OK).send({ id: user.id, email: user.email });
 }

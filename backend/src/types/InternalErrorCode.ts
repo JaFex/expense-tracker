@@ -9,4 +9,5 @@ export enum InternalErrorCode {
 
 	EMAIL_ALREADY_REGISTERED = 2001,
 	INVALID_CREDENTIALS = 2002,
+	INVALID_TOKEN = 2003,
 }

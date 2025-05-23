@@ -6,6 +6,10 @@ dotenv.config({ path: '.env' });
 const ConfigSchema = z.object({
 	PORT: z.coerce.number(),
 	DATABASE_URL: z.string(),
+
+	JWT_SECRET: z.coerce.string(),
+	JWT_EXPIRES_IN: z.coerce.number(),
+
 	DEBUG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
 });
 
