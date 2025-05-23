@@ -69,5 +69,5 @@ export async function SigninHandler(
 
 export async function ProfileHandler(req: AuthenticatedRequest, res: Response) {
 	const { user } = req;
-	res.status(HttpStatusCode.OK).send({ id: user.id, email: user.email });
+	res.status(HttpStatusCode.OK).send({ id: user?.id, email: user?.email });
 }
