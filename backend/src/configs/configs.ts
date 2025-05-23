@@ -9,6 +9,8 @@ const ConfigSchema = z.object({
 
 	JWT_SECRET: z.coerce.string(),
 	JWT_EXPIRES_IN: z.coerce.number(),
+	JWT_REFRESH_SECRET: z.coerce.string(),
+	JWT_REFRESH_EXPIRES_IN: z.coerce.number(),
 
 	DEBUG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
 });

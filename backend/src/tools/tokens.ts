@@ -18,3 +18,15 @@ export function createAuthToken(user: User) {
 export function validateAuthToken(token: string): JwtPayload {
 	return verify(token, configs.JWT_SECRET) as JwtPayload;
 }
+
+export function createRefreshToken(user: User) {
+	return sign(
+		{ id: user.id },
+		configs.JWT_REFRESH_SECRET,
+		configs.JWT_REFRESH_EXPIRES_IN,
+	);
+}
+
+export function validateRefreshToken(token: string): JwtPayload {
+	return verify(token, configs.JWT_REFRESH_SECRET) as JwtPayload;
+}

@@ -1,7 +1,9 @@
 import { Router } from 'express';
 import {
 	ProfileHandler,
+	RefreshTokenHandler,
 	SigninHandler,
+	SignoutHandler,
 	SignupHandler,
 } from '../controllers/identity.controller';
 import { SigninSchema } from '../schemas/signin.schema';
@@ -14,5 +16,9 @@ export const identityRouter = Router();
 identityRouter.post('/signup', validateBody(SignupSchema), SignupHandler);
 
 identityRouter.post('/signin', validateBody(SigninSchema), SigninHandler);
+
+identityRouter.post('/refresh-token', RefreshTokenHandler);
+
+identityRouter.post('/signout', SignoutHandler);
 
 identityRouter.get('/profile', authTokenMiddleware, ProfileHandler);

@@ -7,13 +7,21 @@ import { ConflitException } from '../exceptions/conflit.exception';
 import { UnauthorizedException } from '../exceptions/unauthorized.exception';
 import type { SigninPayload } from '../schemas/signin.schema';
 import type { SignupPayload } from '../schemas/signup.schemas';
-import { createAuthToken } from '../tools/tokens';
+import {
+	createAuthToken,
+	createRefreshToken,
+	validateRefreshToken,
+} from '../tools/tokens';
 import type { AuthenticatedRequest } from '../types/AuthenticatedRequest';
 import { HttpStatusCode } from '../types/HttpStatusCode';
 import { InternalErrorCode } from '../types/InternalErrorCode';
 
 async function getByEmail(email: string) {
 	return db.query.users.findFirst({ where: eq(users.email, email) });
+}
+
+async function getById(id: string) {
+	return db.query.users.findFirst({ where: eq(users.id, id) });
 }
 
 // TODO: In the future we will have support to account confirmationn by email
@@ -63,8 +71,67 @@ export async function SigninHandler(
 	}
 
 	const token = createAuthToken(user);
+	const newRefreshToken = createRefreshToken(user);
+
+	res.cookie('refreshToken', newRefreshToken, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV !== 'development',
+		sameSite: 'strict',
+	});
 
 	res.status(HttpStatusCode.OK).send({ token });
+}
+
+export async function RefreshTokenHandler(req: Request, res: Response) {
+	const { refreshToken } = req.cookies;
+
+	if (!refreshToken) {
+		throw new UnauthorizedException(
+			InternalErrorCode.INVALID_REFRESH_TOKEN,
+			'Invalid refresh token',
+		);
+	}
+
+	try {
+		const data = validateRefreshToken(refreshToken);
+
+		if (!data) {
+			throw new UnauthorizedException(
+				InternalErrorCode.INVALID_REFRESH_TOKEN,
+				'Invalid refresh token',
+			);
+		}
+
+		const user = await getById(data.id);
+
+		if (!user) {
+			throw new UnauthorizedException(
+				InternalErrorCode.INVALID_REFRESH_TOKEN,
+				'Invalid refresh token',
+			);
+		}
+
+		const token = createAuthToken(user);
+		const newRefreshToken = createRefreshToken(user);
+
+		res.cookie('refreshToken', newRefreshToken, {
+			httpOnly: true,
+			secure: process.env.NODE_ENV !== 'development',
+			sameSite: 'strict',
+		});
+
+		res.status(HttpStatusCode.OK).send({ token });
+	} catch (error) {
+		throw new UnauthorizedException(
+			InternalErrorCode.INVALID_REFRESH_TOKEN,
+			'Invalid refresh token',
+		);
+	}
+}
+
+export function SignoutHandler(req: Request, res: Response) {
+	res.clearCookie('refreshToken');
+	res.status(HttpStatusCode.NO_CONTENT).send();
 }
 
 export async function ProfileHandler(req: AuthenticatedRequest, res: Response) {
