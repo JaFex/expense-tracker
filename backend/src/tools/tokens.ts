@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { configs } from '../configs/configs';
-import type { User } from '../db/scema/users';
+import type { User } from '../db/schema/users';
 import type { JwtPayload } from '../types/JwtPayload';
 
 function sign(data: object, secret: string, expiresIn: number) {

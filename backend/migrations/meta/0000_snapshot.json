@@ -1,35 +1,82 @@
 {
-  "id": "174a99c1-d52a-43e3-806f-dd8f513247ca",
+  "id": "dcb0378b-0070-485e-a63f-78c15c76400e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.settings": {
+      "name": "settings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "userId": {
+          "name": "userId",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "currencies",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'EUR'"
+        },
+        "language": {
+          "name": "language",
+          "type": "countries",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'pt-PT'"
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "timezones",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Europe/Lisbon'"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "settings_userId_users_id_fk": {
+          "name": "settings_userId_users_id_fk",
+          "tableFrom": "settings",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
-        "_id": {
-          "name": "_id",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true,
-          "identity": {
-            "type": "always",
-            "name": "users__id_seq",
-            "schema": "public",
-            "increment": "1",
-            "startWith": "1",
-            "minValue": "1",
-            "maxValue": "2147483647",
-            "cache": "1",
-            "cycle": false
-          }
-        },
         "id": {
           "name": "id",
           "type": "uuid",
-          "primaryKey": false,
-          "notNull": false,
+          "primaryKey": true,
+          "notNull": true,
           "default": "gen_random_uuid()"
         },
         "email": {
@@ -43,19 +90,24 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "firstName": {
+          "name": "firstName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lastName": {
+          "name": "lastName",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_id_unique": {
-          "name": "users_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "id"
-          ]
-        },
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
@@ -69,7 +121,114 @@
       "isRLSEnabled": false
     }
   },
-  "enums": {},
+  "enums": {
+    "public.countries": {
+      "name": "countries",
+      "schema": "public",
+      "values": [
+        "en-US",
+        "en-GB",
+        "pt-BR",
+        "pt-PT",
+        "es-ES",
+        "es-MX",
+        "fr-FR",
+        "de-DE",
+        "it-IT",
+        "ja-JP",
+        "zh-CN",
+        "zh-TW",
+        "ru-RU",
+        "ar-SA",
+        "hi-IN",
+        "ko-KR",
+        "nl-NL",
+        "sv-SE",
+        "tr-TR",
+        "pl-PL",
+        "da-DK",
+        "fi-FI",
+        "no-NO",
+        "cs-CZ",
+        "he-IL",
+        "th-TH",
+        "id-ID",
+        "ms-MY",
+        "vi-VN",
+        "el-GR",
+        "ro-RO",
+        "hu-HU",
+        "uk-UA",
+        "ca-ES",
+        "hr-HR"
+      ]
+    },
+    "public.currencies": {
+      "name": "currencies",
+      "schema": "public",
+      "values": [
+        "USD",
+        "EUR",
+        "GBP",
+        "CAD",
+        "AUD",
+        "JPY",
+        "CNY",
+        "INR",
+        "BRL",
+        "CHF",
+        "SEK",
+        "NOK",
+        "DKK",
+        "RUB",
+        "MXN",
+        "SGD",
+        "HKD",
+        "NZD",
+        "ZAR"
+      ]
+    },
+    "public.date_format": {
+      "name": "date_format",
+      "schema": "public",
+      "values": [
+        "YYYY-MM-DD",
+        "DD/MM/YYYY",
+        "MM/DD/YYYY",
+        "YYYY/MM/DD",
+        "DD-MM-YYYY",
+        "MM-DD-YYYY",
+        "D MMMM YYYY",
+        "MMMM D, YYYY",
+        "D MMM YYYY",
+        "MMM D, YYYY",
+        "YYYY-MM-DD HH:mm",
+        "DD/MM/YYYY HH:mm",
+        "YYYY-MM-DDTHH:mm:ssZ",
+        "ddd, D MMM YYYY",
+        "dddd, D MMMM YYYY"
+      ]
+    },
+    "public.timezones": {
+      "name": "timezones",
+      "schema": "public",
+      "values": [
+        "UTC",
+        "Europe/Lisbon",
+        "Atlantic/Azores",
+        "Europe/London",
+        "America/New_York",
+        "America/Los_Angeles",
+        "Europe/Paris",
+        "Asia/Tokyo",
+        "Australia/Sydney",
+        "America/Chicago",
+        "America/Sao_Paulo",
+        "Asia/Shanghai",
+        "Asia/Dubai"
+      ]
+    }
+  },
   "schemas": {},
   "sequences": {},
   "roles": {},

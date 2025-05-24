@@ -1,8 +1,10 @@
 import { hash, verify } from 'argon2';
 import { eq } from 'drizzle-orm';
 import type { Request, Response } from 'express';
+import { isEmpty } from 'lodash';
 import { db } from '../db';
-import { users } from '../db/scema/users';
+import { settings } from '../db/schema/settings';
+import { users } from '../db/schema/users';
 import { ConflitException } from '../exceptions/conflit.exception';
 import { UnauthorizedException } from '../exceptions/unauthorized.exception';
 import type { SigninPayload } from '../schemas/signin.schema';
@@ -24,13 +26,17 @@ async function getById(id: string) {
 	return db.query.users.findFirst({ where: eq(users.id, id) });
 }
 
+async function getSettingsByUserId(userId: string) {
+	return db.query.settings.findFirst({ where: eq(settings.userId, userId) });
+}
+
 // TODO: In the future we will have support to account confirmationn by email
 // the user should only be able to signin after confirming the email
 export async function SignupHandler(
 	req: Request<unknown, SignupPayload>,
 	res: Response,
 ) {
-	const { email, password } = req.body;
+	const { email, password, firstName, lastName } = req.body;
 
 	const user = await getByEmail(email);
 	if (user) {
@@ -41,7 +47,11 @@ export async function SignupHandler(
 	}
 
 	const hashedPassword = await hash(password);
-	await db.insert(users).values({ email, password: hashedPassword });
+	const insertedUser = await db
+		.insert(users)
+		.values({ email, password: hashedPassword, firstName, lastName })
+		.returning({ _id: users.id });
+	await db.insert(settings).values({ userId: insertedUser[0]._id });
 
 	res.send(HttpStatusCode.CREATED);
 }
@@ -134,7 +144,41 @@ export function SignoutHandler(req: Request, res: Response) {
 	res.status(HttpStatusCode.NO_CONTENT).send();
 }
 
-export async function ProfileHandler(req: AuthenticatedRequest, res: Response) {
+export async function GetProfileHandler(
+	req: AuthenticatedRequest,
+	res: Response,
+) {
 	const { user } = req;
-	res.status(HttpStatusCode.OK).send({ id: user?.id, email: user?.email });
+
+	const settings = await getSettingsByUserId(user?.id || '');
+
+	const { password: _, ...userWithoutPassword } = user || {};
+	res.status(HttpStatusCode.OK).send({ ...userWithoutPassword, settings });
+}
+
+export async function UpdateProfileHandler(
+	req: AuthenticatedRequest,
+	res: Response,
+) {
+	const { user } = req;
+
+	if (!isEmpty(req.body)) {
+		const { firstName, lastName, ...updatedSettings } = req.body;
+
+		if (firstName || lastName) {
+			await db
+				.update(users)
+				.set({ firstName, lastName })
+				.where(eq(users.id, user?.id || ''));
+		}
+
+		if (!isEmpty(updatedSettings)) {
+			await db
+				.update(settings)
+				.set(updatedSettings)
+				.where(eq(settings.userId, user?.id || ''));
+		}
+	}
+
+	res.status(HttpStatusCode.NO_CONTENT).send();
 }

@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import type { NextFunction, Request, Response } from 'express';
 import { db } from '../../db';
-import { users } from '../../db/scema/users';
+import { users } from '../../db/schema/users';
 import { UnauthorizedException } from '../../exceptions/unauthorized.exception';
 import type { AuthenticatedRequest } from '../../types/AuthenticatedRequest';
 import { InternalErrorCode } from '../../types/InternalErrorCode';
