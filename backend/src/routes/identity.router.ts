@@ -11,7 +11,7 @@ import { userWithSettingsSchema } from '../schemas/profile.schema';
 import { SigninSchema } from '../schemas/signin.schema';
 import { SignupSchema } from '../schemas/signup.schemas';
 import { authTokenMiddleware } from '../tools/middlewares/authToken.middleware';
-import { validateBody } from '../tools/validators';
+import { validateBody } from '../tools/middlewares/validateBody.middleware';
 
 export const identityRouter = Router();
 
