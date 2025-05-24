@@ -6,7 +6,7 @@ import {
 	SignoutHandler,
 	SignupHandler,
 	UpdateProfileHandler,
-} from '../controllers/identity.controller';
+} from '../controllers/identity/controller';
 import { authTokenMiddleware } from '../tools/middlewares/authToken.middleware';
 import { validateBody } from '../tools/middlewares/validateBody.middleware';
 import { userWithSettingsSchema } from '../validators/profile.validator';

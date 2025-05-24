@@ -2,33 +2,22 @@ import { hash, verify } from 'argon2';
 import { eq } from 'drizzle-orm';
 import type { Request, Response } from 'express';
 import { isEmpty } from 'lodash';
-import { db } from '../db';
-import { settings } from '../db/schema/settings';
-import { users } from '../db/schema/users';
-import { ConflitException } from '../exceptions/conflit.exception';
-import { UnauthorizedException } from '../exceptions/unauthorized.exception';
+import { db } from '../../db';
+import { settings } from '../../db/schema/settings';
+import { users } from '../../db/schema/users';
+import { ConflitException } from '../../exceptions/conflit.exception';
+import { UnauthorizedException } from '../../exceptions/unauthorized.exception';
 import {
 	createAuthToken,
 	createRefreshToken,
 	validateRefreshToken,
-} from '../tools/tokens';
-import type { AuthenticatedRequest } from '../types/AuthenticatedRequest';
-import { HttpStatusCode } from '../types/HttpStatusCode';
-import { InternalErrorCode } from '../types/InternalErrorCode';
-import type { SigninPayload } from '../validators/signin.validator';
-import type { SignupPayload } from '../validators/signup.validator';
-
-async function getByEmail(email: string) {
-	return db.query.users.findFirst({ where: eq(users.email, email) });
-}
-
-async function getById(id: string) {
-	return db.query.users.findFirst({ where: eq(users.id, id) });
-}
-
-async function getSettingsByUserId(userId: string) {
-	return db.query.settings.findFirst({ where: eq(settings.userId, userId) });
-}
+} from '../../tools/tokens';
+import type { AuthenticatedRequest } from '../../types/AuthenticatedRequest';
+import { HttpStatusCode } from '../../types/HttpStatusCode';
+import { InternalErrorCode } from '../../types/InternalErrorCode';
+import type { SigninPayload } from '../../validators/signin.validator';
+import type { SignupPayload } from '../../validators/signup.validator';
+import { getByEmail, getById, getSettingsByUserId } from './tools';
 
 // TODO: In the future we will have support to account confirmationn by email
 // the user should only be able to signin after confirming the email
