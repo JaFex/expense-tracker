@@ -7,11 +7,11 @@ import {
 	SignupHandler,
 	UpdateProfileHandler,
 } from '../controllers/identity.controller';
-import { userWithSettingsSchema } from '../schemas/profile.schema';
-import { SigninSchema } from '../schemas/signin.schema';
-import { SignupSchema } from '../schemas/signup.schemas';
 import { authTokenMiddleware } from '../tools/middlewares/authToken.middleware';
 import { validateBody } from '../tools/middlewares/validateBody.middleware';
+import { userWithSettingsSchema } from '../validators/profile.validator';
+import { SigninSchema } from '../validators/signin.validator';
+import { SignupSchema } from '../validators/signup.validator';
 
 export const identityRouter = Router();
 

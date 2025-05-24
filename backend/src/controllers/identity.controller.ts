@@ -7,8 +7,6 @@ import { settings } from '../db/schema/settings';
 import { users } from '../db/schema/users';
 import { ConflitException } from '../exceptions/conflit.exception';
 import { UnauthorizedException } from '../exceptions/unauthorized.exception';
-import type { SigninPayload } from '../schemas/signin.schema';
-import type { SignupPayload } from '../schemas/signup.schemas';
 import {
 	createAuthToken,
 	createRefreshToken,
@@ -17,6 +15,8 @@ import {
 import type { AuthenticatedRequest } from '../types/AuthenticatedRequest';
 import { HttpStatusCode } from '../types/HttpStatusCode';
 import { InternalErrorCode } from '../types/InternalErrorCode';
+import type { SigninPayload } from '../validators/signin.validator';
+import type { SignupPayload } from '../validators/signup.validator';
 
 async function getByEmail(email: string) {
 	return db.query.users.findFirst({ where: eq(users.email, email) });
